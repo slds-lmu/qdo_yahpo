@@ -25,7 +25,7 @@ def evaluate_ranger(x, features, params, bench, task_id, lower, upper, trafo=Tru
     targets = ["mmce"]
     targets.extend(features)
     y = pd.DataFrame(results)[targets]
-    y[["mmce"]] = - y[["mmce"]]  # pyribs maximizes by default
+    y[["mmce"]] = 1 - y[["mmce"]]  # pyribs maximizes by default so we turn mmce into acc
     return y.values  # pyribs expects a numpy array as return value
 
 def run_ranger_interpretability(task_id):
