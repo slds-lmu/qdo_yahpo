@@ -6,11 +6,12 @@ from ribs.optimizers import Optimizer
 from random_emitter import RandomEmitter
 from helpers import trafo, retrafo
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 from ribs.visualize import grid_archive_heatmap
 import numpy as np
 import pandas as pd
-plt.rcParams['pdf.fonttype'] = 42
-plt.rcParams['ps.fonttype'] = 42
+plt.rcParams["pdf.fonttype"] = 42
+plt.rcParams["ps.fonttype"] = 42
 
 def evaluate_ranger(x, features, params, bench, task_id, lower, upper, trafo=True):
     if trafo:
@@ -93,12 +94,14 @@ def run_ranger_interpretability(task_id):
         x = optimizer.ask()
         results = evaluate_ranger(x, ["nf", "ias"], params, bench, task_id, lower, upper)
         optimizer.tell(results[:, 0], results[:, [1, 2]])
-    plt.figure(figsize=(8, 6))
+    plt.rcParams.update({"font.size": 12})
+    plt.figure(figsize=(10, 6))
     grid_archive_heatmap(archive)
-    plt.title("iaml_ranger " + task_id)
+    plt.title("iaml_ranger_" + task_id)
     plt.xlabel("NF")
     plt.ylabel("IAS")
-    plt.savefig("Plots/iaml_ranger_ias_nf_" + task_id + ".pdf", dpi = 150)
+    plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(1))
+    plt.savefig("Plots/iaml_ranger_ias_nf_" + task_id + ".pdf", dpi = 150, bbox_inches = "tight")
     return None
 
 def run_ranger_hardware(task_id):
@@ -166,12 +169,13 @@ def run_ranger_hardware(task_id):
         x = optimizer.ask()
         results = evaluate_ranger(x, ["rammodel", "timepredict"], params, bench, task_id, lower, upper)
         optimizer.tell(results[:, 0], results[:, [1, 2]])
-    plt.figure(figsize=(8, 6))
+    plt.rcParams.update({"font.size": 12})
+    plt.figure(figsize=(10, 6))
     grid_archive_heatmap(archive)
-    plt.title("iaml_ranger " + task_id)
+    plt.title("iaml_ranger_" + task_id)
     plt.xlabel("rammodel")
     plt.ylabel("timepredict")
-    plt.savefig("Plots/iaml_ranger_rammodel_timepredict_" + task_id + ".pdf", dpi = 150)
+    plt.savefig("Plots/iaml_ranger_rammodel_timepredict_" + task_id + ".pdf", dpi = 150, bbox_inches = "tight")
     return None
 
 if __name__ == "__main__":
